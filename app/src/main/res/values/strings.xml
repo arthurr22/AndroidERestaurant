@@ -1,29 +1,22 @@
 <resources>
     <string name="app_name">AndroidERestaurant</string>
-    <string name="home_welcome">Bienvenue</string>
     <string name="restaurant_name">DroidRestaurant</string>
     <string name="title_activity_menu">CategoryActivity</string>
 
     <!-- Simulated entry items -->
     <string name="entrees">Entrées</string>
     <string-array name="entries_list">
-        <item>Entrée 1</item>
-        <item>Entrée 2</item>
     </string-array>
 
     <!-- Simulated main course items -->
-    <string name="main_courses">Plats</string>
+    <string name="main_courses">Plat</string>
     <string-array name="main_courses_list">
-        <item>Plat 1</item>
-        <item>Plat 2</item>j'
 
     </string-array>
 
     <!-- Simulated dessert items -->
-    <string name="desserts">Desserts</string>
+    <string name="desserts">Dessert</string>
     <string-array name="desserts_list">
-        <item>Dessert 1</item>
-        <item>Dessert 2</item>
 
     </string-array>
     <string name="title_activity_details">DetailsActivity</string>

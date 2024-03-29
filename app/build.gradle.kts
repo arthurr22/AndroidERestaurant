@@ -50,8 +50,6 @@ android {
 }
 
 dependencies {
-
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -71,6 +69,6 @@ dependencies {
     implementation("com.android.volley:volley:1.2.1")
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("io.coil-kt:coil-compose:1.4.0")
-
-
+    implementation ("androidx.navigation:navigation-compose:2.4.0-alpha10")
+    implementation ("androidx.appcompat:appcompat:1.4.1")
 }

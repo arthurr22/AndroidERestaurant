@@ -20,14 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.Surface
-
-
 
 import fr.isen.daoulas.androideresraurant.ui.theme.AndroidEResraurantTheme
 
@@ -57,46 +54,53 @@ fun CategorySelection(context: Context) {
 
     ) {
         Header()
+        Spacer(modifier = Modifier.height(16.dp))
         Banner()
         Spacer(modifier = Modifier.height(16.dp))
         Column(
-            verticalArrangement = Arrangement.Center, // Centrer verticalement
-            horizontalAlignment = Alignment.CenterHorizontally // Centrer horizontalement
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CategoryButton("Entrée", context)
+            CategoryButton("Entrées", context)
             Divider(
                 color = Color.Gray,
                 thickness = 1.dp,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
-            CategoryButton("Plat", context)
+            CategoryButton("Plats", context)
             Divider(
                 color = Color.Gray,
                 thickness = 1.dp,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
-            CategoryButton("Dessert", context)
+            CategoryButton("Desserts", context)
         }
     }
 }
 
 @Composable
-fun Header() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary)
-            .height(56.dp),
+fun Header(modifier: Modifier= Modifier) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(35.dp))
         Text(
-            stringResource(id = R.string.restaurant_name),
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            text = "DroidRestaurant",
+            color = Color.White,
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp // Augmentez la taille du texte ici
+            ),
+            modifier = Modifier
+                .background(Color(0xFFFFA500))
+                .fillMaxWidth()
+                .padding(vertical = 30.dp, horizontal = 16.dp)
+
         )
-        Spacer(modifier = Modifier.weight(1f))
     }
 }
+
 
 @Composable
 fun Banner(modifier: Modifier = Modifier) {
