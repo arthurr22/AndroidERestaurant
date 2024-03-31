@@ -39,22 +39,30 @@ import androidx.compose.ui.text.style.TextAlign
 import java.io.File
 import java.io.FileWriter
 import androidx.compose.material3.AlertDialog
-
-
+import androidx.compose.ui.res.painterResource
+import android.content.SharedPreferences
+import android.content.Context
 
 class CategoryActivity : ComponentActivity() {
+
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val category = intent.getStringExtra("category") ?: ""
         setContent {
             AndroidEResraurantTheme {
+                sharedPreferences = getSharedPreferences("cart", Context.MODE_PRIVATE)
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
                     Column {
-                        ToolBar()
+                        ToolBar(
+                            onCartClick = { navigateToCart() },
+                            cartItemCount = getCartItemCount()
+                        )
                         NavHost(navController = navController, startDestination = "categoryList") {
                             composable("categoryList") {
                                 MenuContent(category, this@CategoryActivity)
@@ -64,6 +72,16 @@ class CategoryActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+
+
+    private fun getCartItemCount(): Int {
+        return sharedPreferences.getInt("cartItemCount", 0)
+    }
+
+    private fun setCartItemCount(count: Int) {
+        sharedPreferences.edit().putInt("cartItemCount", count).apply()
     }
 
     @Composable
@@ -152,7 +170,12 @@ class CategoryActivity : ComponentActivity() {
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            LazyRow(contentPadding = PaddingValues(start = 0.dp, end = 0.dp)) { // Aucun padding horizontal pour le LazyRow
+            LazyRow(
+                contentPadding = PaddingValues(
+                    start = 0.dp,
+                    end = 0.dp
+                )
+            ) { // Aucun padding horizontal pour le LazyRow
                 items(item.images) { imageUrl ->
                     Image(
                         painter = rememberImagePainter(
@@ -267,6 +290,7 @@ class CategoryActivity : ComponentActivity() {
                 onClick = {
                     saveToCart(item)
                     showDialog = true // Set showDialog to true to show the AlertDialog
+                    setCartItemCount(getCartItemCount() + quantity)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -287,7 +311,8 @@ class CategoryActivity : ComponentActivity() {
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = {
-                    showDialog = false // Dismiss the dialog when backdrop is clicked or back button is pressed
+                    showDialog =
+                        false // Dismiss the dialog when backdrop is clicked or back button is pressed
                 },
                 title = {
                     Text(text = "Ajouté au panier")
@@ -305,9 +330,12 @@ class CategoryActivity : ComponentActivity() {
         }
     }
 
-
     @Composable
-    fun ToolBar(modifier: Modifier = Modifier) {
+    fun ToolBar(
+        modifier: Modifier = Modifier,
+        onCartClick: () -> Unit,
+        cartItemCount: Int
+    ) {
         Column(
             modifier = modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -325,7 +353,58 @@ class CategoryActivity : ComponentActivity() {
                     .fillMaxWidth()
                     .padding(vertical = 30.dp, horizontal = 16.dp)
             )
+            Box {
+                Image(
+                    painter = painterResource(id = R.drawable.panier),
+                    contentDescription = "Panier",
+                    modifier = Modifier
+                        .size(70.dp)
+                        .padding(12.dp)
+                        .clickable {
+                            onCartClick()
+                        }
+                )
+
+                if (cartItemCount > 0) {
+                    // Ajout de la pastille
+                    Box(
+                        modifier = Modifier
+                            .offset(
+                                15.dp, -15.dp
+                            ) // Placer la pastille dans le coin en haut à droite de l'image
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .background(Color.Red)
+                                .padding(4.dp)
+                                .size(20.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = cartItemCount.toString(),
+                                color = Color.White,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
+                }
+            }
+
+            Text(
+                text = "($cartItemCount)",
+                color = Color.White,
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                ),
+                modifier = Modifier.padding(4.dp)
+            )
         }
+    }
+
+
+    private fun navigateToCart() {
+        // Ajoutez ici la logique pour naviguer vers l'écran du panier
     }
 
     // Fonction pour stocker les informations dans un fichier JSON
@@ -336,6 +415,8 @@ class CategoryActivity : ComponentActivity() {
         FileWriter(cartFile, true).use { fileWriter ->
             fileWriter.write(json)
         }
+
+        setCartItemCount(getCartItemCount()) // Incrémenter le compteur d'un élément
     }
 }
 
